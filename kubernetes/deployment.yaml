@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vulnpilot-api
+  labels:
+    app: vulnpilot
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vulnpilot
+  template:
+    metadata:
+      labels:
+        app: vulnpilot
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: api
+        image: vulnpilot:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vulnpilot-service
+spec:
+  selector:
+    app: vulnpilot
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000

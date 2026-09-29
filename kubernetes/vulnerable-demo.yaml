@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vulnerable-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vulnerable-demo
+  template:
+    metadata:
+      labels:
+        app: vulnerable-demo
+    spec:
+      containers:
+      - name: vulnerable-app
+        image: nginx:1.14.2  # Intentionally old, vulnerable version
+        securityContext:
+          privileged: true  # This will be blocked by Gatekeeper!

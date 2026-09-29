@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vulnpilot"
+version = "0.1.0"
+description = "AI-Assisted DevSecOps Pipeline for Kubernetes Vulnerability Triage and Policy Enforcement"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "pydantic>=2.0.0",
+    "typer>=0.9.0",
+    "fastapi>=0.103.0",
+    "uvicorn>=0.23.0",
+    "pyyaml>=6.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov"
+]
+
+[project.scripts]
+vulnpilot = "vulnpilot.main:app"

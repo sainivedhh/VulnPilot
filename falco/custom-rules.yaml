@@ -1,0 +1,12 @@
+- rule: Package management process launched in container
+  desc: Detects execution of package managers (apt, apk, yum) inside a running container.
+  condition: >
+    spawned_process 
+    and container 
+    and (proc.name in (apt, apt-get, apk, yum, dnf))
+  output: >
+    Package manager executed in container 
+    (user=%user.name user_loginuid=%user.loginuid 
+    command=%proc.cmdline container_id=%container.id container_name=%container.name)
+  priority: WARNING
+  tags: [container, mitre_execution]

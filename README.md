@@ -1,0 +1,59 @@
+# VulnPilot
+
+**VulnPilot — AI-Assisted DevSecOps Pipeline for Kubernetes Vulnerability Triage and Policy Enforcement**
+
+## 1. Problem Statement
+
+Traditional container security scanners generate large numbers of CVEs and security findings. Reviewing these manually is time-consuming and prone to human error. VulnPilot aims to automatically collect these findings, enrich and prioritize them, explain why important vulnerabilities matter, enforce security policies, and prevent unsafe workloads from progressing through the deployment pipeline.
+
+## 2. Motivation
+
+Security should not be a bottleneck in a DevSecOps pipeline. By combining deterministic risk scoring with AI-assisted triage, security engineers and developers can focus on vulnerabilities that actually matter in their context.
+
+## 3. Architecture
+
+The current architecture represents Phase 1 of the implementation:
+- **Scanner Integration**: Trivy JSON parsing into normalized Pydantic models.
+- **CLI**: A Typer-based command-line interface to interact with the parsed data.
+- **Testing**: Pytest for ensuring parser accuracy.
+
+```text
+GitHub Actions -> Docker Build -> Trivy Vulnerability Scan -> Scan Result Parser -> VulnPilot CLI
+```
+
+*Future phases will introduce the Risk Engine, Policy Engine, AI-Assisted Triage, and Kubernetes deployment components.*
+
+## 4. Features
+
+- **Phase 1**: Trivy JSON report parser and CLI.
+- **Future**: Deterministic risk scoring, OPA Gatekeeper policies, Falco runtime monitoring, AI enrichment.
+
+## 5. Technology Stack
+
+- Python 3.9+
+- Pydantic (Data modeling)
+- Typer (CLI)
+- Pytest (Testing)
+
+## 6. Installation
+
+```bash
+# 1. Create a virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# 2. Install dependencies
+pip install -r requirements.txt
+pip install -e .
+
+# 3. Run the CLI
+vulnpilot --help
+```
+
+## 7. Local Demo
+
+To parse a sample Trivy vulnerability report:
+
+```bash
+vulnpilot scan tests/fixtures/trivy_sample.json
+```

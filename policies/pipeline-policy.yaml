@@ -1,0 +1,13 @@
+deployment_policy:
+  block:
+    severity:
+      - CRITICAL
+  warn:
+    severity:
+      - MEDIUM
+  high:
+    maximum_allowed: 0
+  require_fix_for:
+    - HIGH
+    - CRITICAL
+  fail_on_policy_violation: true
