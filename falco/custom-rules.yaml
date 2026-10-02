@@ -1,12 +1,47 @@
-- rule: Package management process launched in container
+- rule: Package manager launched in container
   desc: Detects execution of package managers (apt, apk, yum) inside a running container.
   condition: >
-    spawned_process 
-    and container 
-    and (proc.name in (apt, apt-get, apk, yum, dnf))
+    spawned_process
+    and container
+    and container.name != "host"
+    and (proc.name in (apt, apt-get, apk, yum, dnf, pip, npm, gem, cargo))
   output: >
-    Package manager executed in container 
-    (user=%user.name user_loginuid=%user.loginuid 
-    command=%proc.cmdline container_id=%container.id container_name=%container.name)
+    Package manager executed in container
+    (user=%user.name user_loginuid=%user.loginuid
+    command=%proc.cmdline container_id=%container.id container_name=%container.name
+    image=%container.image.repository)
   priority: WARNING
-  tags: [container, mitre_execution]
+  tags: [container, mitre_execution, T1072]
+
+- rule: Shell spawned in container
+  desc: Detects a shell process being spawned inside a container.
+  condition: >
+    spawned_process
+    and container
+    and container.name != "host"
+    and proc.name in (bash, sh, zsh, dash, ksh, csh, tcsh)
+    and not proc.pname in (containerd, runc, docker)
+  output: >
+    Shell spawned inside container
+    (user=%user.name shell=%proc.name parent=%proc.pname
+    container_id=%container.id container_name=%container.name
+    image=%container.image.repository)
+  priority: WARNING
+  tags: [container, shell, mitre_execution, T1059]
+
+- rule: Write to /etc or binary directory in container
+  desc: Detects writes to /etc, /bin, /sbin, /usr/bin or /usr/sbin inside a container.
+  condition: >
+    open_write
+    and container
+    and (fd.name startswith /etc/ or fd.name startswith /bin/ or
+         fd.name startswith /sbin/ or fd.name startswith /usr/bin/ or
+         fd.name startswith /usr/sbin/)
+    and not proc.name in (rpm, dpkg, apk)
+  output: >
+    Write to sensitive directory in container
+    (user=%user.name command=%proc.cmdline file=%fd.name
+    container_id=%container.id container_name=%container.name
+    image=%container.image.repository)
+  priority: ERROR
+  tags: [container, filesystem, mitre_persistence, T1565]

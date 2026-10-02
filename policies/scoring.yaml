@@ -1,0 +1,19 @@
+# Default scoring weights — override via --scoring-config flag
+scoring:
+  # Base weight applied to the CVSS score (cvss * base_cvss_weight → points)
+  base_cvss_weight: 10.0
+
+  # Bonus points added when the workload is internet-facing
+  internet_facing_bonus: 20
+
+  # Bonus points added when the runtime environment is "production"
+  production_bonus: 15
+
+  # Bonus points added when the CVE is in the CISA KEV catalog
+  kev_bonus: 20
+
+  # Bonus points added per 0.1 of EPSS score (e.g. 0.9 EPSS → +9 × epss_per_tenth)
+  epss_per_tenth: 3
+
+  # Bonus points added when a fixed version is NOT available (unfixable risk)
+  no_fix_bonus: 5

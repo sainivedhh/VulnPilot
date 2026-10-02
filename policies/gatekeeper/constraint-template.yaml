@@ -1,29 +1,50 @@
 apiVersion: templates.gatekeeper.sh/v1beta1
 kind: ConstraintTemplate
 metadata:
-  name: k8sdisallowprivileged
+  name: k8spodprivileged
+  annotations:
+    description: "Blocks privileged pods and enforces security context requirements."
 spec:
   crd:
     spec:
       names:
-        kind: K8sDisallowPrivileged
+        kind: K8sPodPrivileged
   targets:
     - target: admission.k8s.gatekeeper.sh
       rego: |
-        package k8sdisallowprivileged
-        
+        package vulnpilot.gatekeeper
+
         violation[{"msg": msg}] {
-          c := input.review.object.spec.containers[_]
-          c.securityContext.privileged
-          msg := sprintf("Privileged container is not allowed: %v", [c.name])
+          container := input.review.object.spec.containers[_]
+          container.securityContext.privileged == true
+          msg := sprintf("Container '%v' is privileged.", [container.name])
+        }
+
+        violation[{"msg": msg}] {
+          not input.review.object.spec.securityContext.runAsNonRoot
+          msg := "Pod spec must set runAsNonRoot: true"
+        }
+
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not container.securityContext.readOnlyRootFilesystem
+          msg := sprintf("Container '%v' must set readOnlyRootFilesystem: true", [container.name])
+        }
+
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not container.resources.limits
+          msg := sprintf("Container '%v' must define resource limits.", [container.name])
         }
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
-kind: K8sDisallowPrivileged
+kind: K8sPodPrivileged
 metadata:
-  name: disallow-privileged-containers
+  name: no-privileged-pods
 spec:
   match:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    namespaces:
+      - "production"

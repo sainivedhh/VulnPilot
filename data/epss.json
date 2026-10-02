@@ -1,0 +1,13 @@
+{
+  "model_version": "v2023.03.01",
+  "score_date": "2024-01-01T00:00:00+0000",
+  "scores": [
+    {"cve": "CVE-2021-44228", "epss": 0.97538, "percentile": 0.99992},
+    {"cve": "CVE-2022-22963", "epss": 0.97418, "percentile": 0.99979},
+    {"cve": "CVE-2023-44487", "epss": 0.91234, "percentile": 0.99901},
+    {"cve": "CVE-2023-23397", "epss": 0.87123, "percentile": 0.99876},
+    {"cve": "CVE-2024-3400",  "epss": 0.94521, "percentile": 0.99955},
+    {"cve": "CVE-2023-1234",  "epss": 0.32100, "percentile": 0.86000},
+    {"cve": "CVE-2023-5678",  "epss": 0.05200, "percentile": 0.71000}
+  ]
+}
