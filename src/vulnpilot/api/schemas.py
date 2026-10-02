@@ -1,5 +1,7 @@
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel
-from typing import List, Optional, Dict, Any
+
 
 class ScanRequest(BaseModel):
     image_name: str

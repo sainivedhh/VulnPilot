@@ -1,6 +1,9 @@
+from typing import List
+
 from pydantic import BaseModel
-from typing import List, Optional
+
 from vulnpilot.scanners.models import Vulnerability
+
 
 class WorkloadContext(BaseModel):
     """

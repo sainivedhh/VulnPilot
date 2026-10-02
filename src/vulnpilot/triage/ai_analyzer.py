@@ -1,6 +1,7 @@
 import os
-import json
+
 from vulnpilot.api.schemas import TriageRequest, TriageResponse
+
 
 class AIAnalyzer:
     """

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
-from .schemas import ScanRequest, TriageRequest, TriageResponse
+
 from vulnpilot.scanners.trivy import TrivyParser
-from vulnpilot.triage.risk_engine import RiskEngine, WorkloadContext
-from vulnpilot.policy.evaluator import PolicyEvaluator
 from vulnpilot.triage.ai_analyzer import AIAnalyzer
+
+from .schemas import ScanRequest, TriageRequest, TriageResponse
 
 router = APIRouter()
 

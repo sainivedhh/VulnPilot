@@ -1,5 +1,7 @@
-from pydantic import BaseModel, Field
 from typing import Optional
+
+from pydantic import BaseModel, Field
+
 
 class Vulnerability(BaseModel):
     id: str = Field(..., description="Vulnerability ID (e.g., CVE-XXXX-XXXX)")

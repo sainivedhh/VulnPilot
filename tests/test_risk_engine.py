@@ -1,5 +1,6 @@
 from vulnpilot.scanners.models import Vulnerability
 from vulnpilot.triage.risk_engine import RiskEngine, WorkloadContext
+from hypothesis import given, strategies as st
 
 def test_risk_engine_critical_internet_facing():
     # An 8.0 CVSS vulnerability in a production, internet-facing environment
@@ -64,3 +65,16 @@ def test_risk_engine_fallback_severity():
     # Base = 50 (from MEDIUM)
     assert result.score == 50
     assert result.category == "MEDIUM"
+
+@given(
+    cvss=st.floats(min_value=0.0, max_value=10.0),
+    internet=st.booleans(),
+    prod=st.booleans()
+)
+def test_risk_score_bounds_and_monotonicity(cvss, internet, prod):
+    vuln = Vulnerability(id="CVE-H", package="pkg", installed_version="1", severity="LOW", cvss=cvss)
+    ctx = WorkloadContext(internet_exposed=internet, runtime_environment="production" if prod else "development")
+    engine = RiskEngine()
+    result = engine.evaluate(vuln, ctx)
+    assert 0 <= result.score <= 100
+

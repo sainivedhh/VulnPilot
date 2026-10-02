@@ -1,6 +1,8 @@
 import json
-from typing import List, Dict, Any
+from typing import Any, Dict, List
+
 from .models import Vulnerability
+
 
 class TrivyParser:
     def parse_file(self, file_path: str) -> List[Vulnerability]:

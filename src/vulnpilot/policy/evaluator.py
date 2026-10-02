@@ -1,8 +1,11 @@
+from typing import List, Tuple
+
 import yaml
 from pydantic import BaseModel
-from typing import List, Tuple
+
 from vulnpilot.scanners.models import Vulnerability
 from vulnpilot.triage.risk_engine import RiskScore
+
 
 class PolicyResult(BaseModel):
     decision: str  # PASS, WARN, BLOCK

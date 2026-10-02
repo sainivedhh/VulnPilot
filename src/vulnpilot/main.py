@@ -1,12 +1,13 @@
+from pathlib import Path
+
 import typer
 import uvicorn
-from typing import Optional
-from pathlib import Path
 from fastapi import FastAPI
+
+from vulnpilot.api.routes import router
+from vulnpilot.policy.evaluator import PolicyEvaluator
 from vulnpilot.scanners.trivy import TrivyParser
 from vulnpilot.triage.risk_engine import RiskEngine, WorkloadContext
-from vulnpilot.policy.evaluator import PolicyEvaluator
-from vulnpilot.api.routes import router
 
 app = typer.Typer(help="VulnPilot - AI-Assisted DevSecOps Pipeline")
 api_app = FastAPI(title="VulnPilot API", description="AI-Assisted DevSecOps Pipeline API")
