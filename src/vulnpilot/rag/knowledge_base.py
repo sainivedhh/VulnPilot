@@ -30,7 +30,7 @@ class FakeEmbedder(Embedder):
     """Deterministic fake embedder for offline tests.  Uses MD5 → floats."""
 
     def embed(self, text: str) -> list[float]:
-        digest = hashlib.md5(text.encode()).digest()
+        digest = hashlib.md5(text.encode(), usedforsecurity=False).digest()
         return [b / 255.0 for b in digest]  # 16-dim vector
 
 

@@ -128,7 +128,7 @@ def scan(
 
 
 @app.command()
-def serve(host: str = "0.0.0.0", port: int = 8000) -> None:
+def serve(host: str = "127.0.0.1", port: int = 8000) -> None:
     """Start the FastAPI REST service."""
     typer.echo(f"Starting VulnPilot API on {host}:{port}...")
     uvicorn.run(api_app, host=host, port=port)
