@@ -9,7 +9,7 @@ COPY src/ ./src/
 
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir --prefix=/install -r requirements.txt \
-    && pip install --no-cache-dir --prefix=/install -e . --no-deps
+    && pip install --no-cache-dir --prefix=/install --no-deps .
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Stage 2: Runtime — minimal surface area
