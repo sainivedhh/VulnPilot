@@ -8,11 +8,10 @@ import abc
 import logging
 import os
 import time
-from typing import Optional
 
 from pydantic import BaseModel, ValidationError
 
-from vulnpilot.api.schemas import TriageRequest, TriageResponse
+from vulnpilot.api.schemas import TriageRequest
 from vulnpilot.triage.redaction import sanitise_for_llm
 
 logger = logging.getLogger(__name__)
@@ -97,7 +96,7 @@ class FallbackProvider(TriageProvider):
 class MockProvider(TriageProvider):
     """Configurable mock provider for unit and evaluation tests."""
 
-    def __init__(self, response: Optional[LLMTriageResponse] = None) -> None:
+    def __init__(self, response: LLMTriageResponse | None = None) -> None:
         self._response = response or LLMTriageResponse(
             priority="high",
             rationale="Mock LLM response",

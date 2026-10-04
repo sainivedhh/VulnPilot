@@ -6,7 +6,6 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
-from typing import Optional
 
 import httpx
 
@@ -24,7 +23,7 @@ def _data_dir() -> Path:
     return d
 
 
-def update_kev(output: Optional[Path] = None, timeout: int = DEFAULT_TIMEOUT) -> bool:
+def update_kev(output: Path | None = None, timeout: int = DEFAULT_TIMEOUT) -> bool:
     dest = output or _data_dir() / "kev.json"
     try:
         resp = httpx.get(KEV_URL, timeout=timeout, follow_redirects=True)
@@ -38,7 +37,7 @@ def update_kev(output: Optional[Path] = None, timeout: int = DEFAULT_TIMEOUT) ->
         return False
 
 
-def update_epss(output: Optional[Path] = None, timeout: int = DEFAULT_TIMEOUT) -> bool:
+def update_epss(output: Path | None = None, timeout: int = DEFAULT_TIMEOUT) -> bool:
     dest = output or _data_dir() / "epss.json"
     try:
         resp = httpx.get(EPSS_URL, timeout=timeout, follow_redirects=True)

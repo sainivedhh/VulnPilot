@@ -1,16 +1,18 @@
+from __future__ import annotations
+
 import json
-from typing import Any, Dict, List
+from typing import Any
 
 from .models import Vulnerability
 
 
 class TrivyParser:
-    def parse_file(self, file_path: str) -> List[Vulnerability]:
+    def parse_file(self, file_path: str) -> list[Vulnerability]:
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
         return self.parse_dict(data)
 
-    def parse_dict(self, data: Dict[str, Any]) -> List[Vulnerability]:
+    def parse_dict(self, data: dict[str, Any]) -> list[Vulnerability]:
         vulnerabilities = []
         results = data.get('Results', [])
         for result in results:

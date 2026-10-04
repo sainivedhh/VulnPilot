@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from __future__ import annotations
 
 import yaml
 from pydantic import BaseModel
@@ -10,14 +10,15 @@ from vulnpilot.triage.risk_engine import RiskScore
 class PolicyResult(BaseModel):
     decision: str  # PASS, WARN, BLOCK
     reason: str
-    violations: List[str]
+    violations: list[str]
+
 
 class PolicyEvaluator:
     def __init__(self, policy_path: str):
         with open(policy_path, 'r', encoding='utf-8') as f:
             self.policy_data = yaml.safe_load(f)
-            
-    def evaluate(self, findings: List[Tuple[Vulnerability, RiskScore]]) -> PolicyResult:
+
+    def evaluate(self, findings: list[tuple[Vulnerability, RiskScore]]) -> PolicyResult:
         deployment_policy = self.policy_data.get('deployment_policy', {})
         block_severities = deployment_policy.get('block', {}).get('severity', [])
         warn_severities = deployment_policy.get('warn', {}).get('severity', [])

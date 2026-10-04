@@ -9,7 +9,7 @@ import abc
 import hashlib
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class FakeEmbedder(Embedder):
     """Deterministic fake embedder for offline tests.  Uses MD5 → floats."""
 
     def embed(self, text: str) -> list[float]:
-        digest = hashlib.md5(text.encode()).digest()  # noqa: S324 – ok for tests
+        digest = hashlib.md5(text.encode()).digest()
         return [b / 255.0 for b in digest]  # 16-dim vector
 
 
@@ -59,14 +59,14 @@ class KnowledgeBase:
 
     def __init__(
         self,
-        knowledge_dir: Optional[Path] = None,
-        embedder: Optional[Embedder] = None,
+        knowledge_dir: Path | None = None,
+        embedder: Embedder | None = None,
     ) -> None:
         self._dir = knowledge_dir or KNOWLEDGE_DIR
         self._embedder = embedder or FakeEmbedder()
         self._chunks: list[str] = []
         self._sources: list[str] = []
-        self._index: object = None
+        self._index: Any = None
         self._built = False
 
     def build(self) -> None:
@@ -109,13 +109,12 @@ class KnowledgeBase:
             return [{"source": "kb_disabled", "text": "Knowledge base not available."}]
 
         try:
-            import faiss  # type: ignore[import-untyped]
             import numpy as np  # type: ignore[import-untyped]
         except ImportError:
             return []
 
         vec = np.array([self._embedder.embed(query)], dtype="float32")
-        distances, indices = self._index.search(vec, top_k)  # type: ignore[call-arg]
+        _distances, indices = self._index.search(vec, top_k)  # type: ignore[union-attr]
         results = []
         for idx in indices[0]:
             if 0 <= idx < len(self._chunks):

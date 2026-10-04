@@ -2,10 +2,8 @@
 from __future__ import annotations
 
 import json
-import sys
 from enum import Enum
 from pathlib import Path
-from typing import Optional
 
 import typer
 import uvicorn
@@ -57,7 +55,7 @@ def _build_sarif(findings: list) -> dict:  # type: ignore[type-arg]
 def scan(
     file_path: str,
     policy_file: str = "policies/pipeline-policy.yaml",
-    scoring_config: Optional[str] = None,
+    scoring_config: str | None = None,
     format: OutputFormat = OutputFormat.table,
 ) -> None:
     """Parse a Trivy JSON report, apply risk scoring, and evaluate against policies."""
@@ -101,7 +99,7 @@ def scan(
         typer.echo(json.dumps(output, indent=2))
 
     elif format == OutputFormat.markdown:
-        typer.echo(f"\n## VulnPilot Scan Results\n\n| CVE | Package | Severity | Score | Category |")
+        typer.echo("\n## VulnPilot Scan Results\n\n| CVE | Package | Severity | Score | Category |")
         typer.echo("|-----|---------|----------|-------|----------|")
         for v, risk in findings:
             typer.echo(f"| {v.id} | {v.package} | {v.severity} | {risk.score} | {risk.category} |")

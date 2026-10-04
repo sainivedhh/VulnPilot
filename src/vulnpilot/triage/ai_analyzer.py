@@ -4,10 +4,8 @@ Backward-compatible with the original API used by routes.py.
 """
 from __future__ import annotations
 
-import os
-
 from vulnpilot.api.schemas import TriageRequest, TriageResponse
-from vulnpilot.triage.providers import FallbackProvider, OpenAIProvider, TriageProvider
+from vulnpilot.triage.providers import OpenAIProvider, TriageProvider
 
 
 class AIAnalyzer:

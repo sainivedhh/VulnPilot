@@ -7,7 +7,6 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +22,7 @@ def _data_dir() -> Path:
 class KevLoader:
     """Load the CISA Known Exploited Vulnerabilities catalog from a local JSON file."""
 
-    def __init__(self, path: Optional[Path] = None) -> None:
+    def __init__(self, path: Path | None = None) -> None:
         self._path = path or _data_dir() / "kev.json"
         self._cves: set[str] = set()
         self._load()
@@ -48,7 +47,7 @@ class KevLoader:
 class EpssLoader:
     """Load EPSS scores from a local JSON file."""
 
-    def __init__(self, path: Optional[Path] = None) -> None:
+    def __init__(self, path: Path | None = None) -> None:
         self._path = path or _data_dir() / "epss.json"
         self._scores: dict[str, float] = {}
         self._load()

@@ -8,14 +8,12 @@ how many points it contributed, so humans can audit the result.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional
 
 import yaml
 from pydantic import BaseModel, Field, model_validator
 
 from vulnpilot.intel.loaders import EpssLoader, KevLoader
 from vulnpilot.scanners.models import Vulnerability
-
 
 # ---------------------------------------------------------------------------
 # Configuration schema
@@ -30,14 +28,14 @@ class ScoringWeights(BaseModel):
     no_fix_bonus: int = 5
 
     @model_validator(mode="after")
-    def _positive_values(self) -> "ScoringWeights":
+    def _positive_values(self) -> ScoringWeights:
         for field, val in self.__dict__.items():
             if isinstance(val, (int, float)) and val < 0:
                 raise ValueError(f"Scoring weight '{field}' must be non-negative, got {val}")
         return self
 
     @classmethod
-    def from_yaml(cls, path: Path) -> "ScoringWeights":
+    def from_yaml(cls, path: Path) -> ScoringWeights:
         with open(path, encoding="utf-8") as f:
             data = yaml.safe_load(f)
         return cls(**data.get("scoring", {}))
@@ -86,19 +84,19 @@ class RiskEngine:
 
     def __init__(
         self,
-        weights: Optional[ScoringWeights] = None,
-        kev: Optional[KevLoader] = None,
-        epss: Optional[EpssLoader] = None,
+        weights: ScoringWeights | None = None,
+        kev: KevLoader | None = None,
+        epss: EpssLoader | None = None,
     ) -> None:
         self._weights = weights or ScoringWeights()
         self._kev = kev or KevLoader()
         self._epss = epss or EpssLoader()
 
     @classmethod
-    def from_config(cls, config_path: Path) -> "RiskEngine":
+    def from_config(cls, config_path: Path) -> RiskEngine:
         return cls(weights=ScoringWeights.from_yaml(config_path))
 
-    def evaluate(self, vuln: Vulnerability, context: WorkloadContext) -> RiskScore:  # noqa: C901
+    def evaluate(self, vuln: Vulnerability, context: WorkloadContext) -> RiskScore:
         w = self._weights
         raw: int = 0
         ex_factors: list[ScoreFactor] = []
